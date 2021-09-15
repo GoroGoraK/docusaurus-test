@@ -3,21 +3,22 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  title: 'Tp Spring Batch',
+  tagline: 'Spring Batch are cool :-)',
+  url: 'https://github.com',
+  baseUrl: '/tutorial-spring-batch/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'GoroGoraK',
+  projectName: 'tutorial-spring-batch',
+  trailingSlash: false,
   themeConfig: {
     navbar: {
-      title: 'My Site',
+      title: 'Tp Spring Batch',
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        alt: 'Spring Logo',
+        src: 'img/spring.jpeg',
       },
       items: [
         {
@@ -26,9 +27,8 @@ module.exports = {
           position: 'left',
           label: 'Tutorial',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/GoroGoraK/docusaurus-test',
           label: 'GitHub',
           position: 'right',
         },
@@ -38,13 +38,13 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Spring Batch',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
-            },
-          ],
+              label: 'Spring batch Documentation',
+              href: 'https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html',
+            }
+          ]
         },
         {
           title: 'Community',
@@ -53,26 +53,14 @@ module.exports = {
               label: 'Stack Overflow',
               href: 'https://stackoverflow.com/questions/tagged/docusaurus',
             },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
           ],
         },
         {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/GoroGoraK/docusaurus-test',
             },
           ],
         },
@@ -89,6 +77,7 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
+          remarkPlugins: [require('mdx-mermaid'), { mermaid: { theme: 'dark' } }],
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',

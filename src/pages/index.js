@@ -17,7 +17,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
+            Spring Batch Tutorial - 8 hours ⏱️
           </Link>
         </div>
       </div>

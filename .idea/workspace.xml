@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0881036a-7832-41b9-a292-54f2ce78ef51" name="Changes" comment="Avancement sur premier batch">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-basics/datasource.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-test.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-basics/profile.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-init/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-init/spring-initialization.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-tips/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-tips/init-import-project.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-tips/test.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-tips/test2.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/batch.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/datasource/ERD_metadata.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/datasource/h2_admin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/datasource/h2_console.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/java.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/java.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/maven.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/maven.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/spring.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/img/tutorial-introduction/spring_batch_diagram.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/sources/tutorial-spring-batch_InitStructure.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/intro.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/intro.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/_category_.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/_category_.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/congratulations.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/congratulations.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/create-a-blog-post.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/create-a-blog-post.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/create-a-document.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/create-a-document.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/create-a-page.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/create-a-page.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/deploy-your-site.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/deploy-your-site.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/markdown-features.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/markdown-features.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-extras/_category_.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-extras/_category_.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docusaurus.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/docusaurus.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HomepageFeatures.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HomepageFeatures.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1wKWBQX0M9mEp3objqb1HX33GnB" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/static/img/datasource" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/img/datasource" />
+      <recent name="$PROJECT_DIR$/static/img" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-basics" />
+      <recent name="$PROJECT_DIR$/static/img/tutorial-introduction" />
+      <recent name="$PROJECT_DIR$/static/sources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/img/datasource" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-tips" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0881036a-7832-41b9-a292-54f2ce78ef51" name="Changes" comment="" />
+      <created>1628207624534</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1628207624534</updated>
+      <workItem from="1628207626578" duration="1882000" />
+      <workItem from="1630270548458" duration="137517000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Avancement sur premier batch" />
+    <option name="LAST_COMMIT_MESSAGE" value="Avancement sur premier batch" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

@@ -1,0 +1,237 @@
+---
+sidebar_position: 2
+---
+
+# Configuration Spring
+
+:::note Info
+
+- Le code source de la partie précédente (Initialisation de structure) est disponible [ici](../../static/sources/tutorial-spring-batch_InitStructure.zip).
+
+- La suite du tutoriel utilisera l'IDE pour les différentes actions comme la création de class, le build/run de l'application via différents launchers.
+
+:::
+
+## Objectif
+
+L'objectif de cette partie est de charger un contexte _Spring_ au lancement de notre application.
+
+## Configuration Spring Boot
+
+### Ajout des dépendances Maven
+
+Nous allons commencer par ajouter ces dépendances au pom de notre application :
+
+~~~xml {6-11,21-31,34-43,48-51} title="pom.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.5.4</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>fr.goro.tutorial</groupId>
+	<artifactId>tutorial-spring-batch</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>tutorial-spring-batch</name>
+	<description>Tutoriel pour Spring Batch</description>
+	<properties>
+		<java.version>11</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>
+
+		<!-- Database -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- Testing -->
+
+			<!-- Copie des IT sources dans les target test sources. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-integration-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/it/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/it/resources</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Tests unitaires. Par défaut, Test, ... -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+
+			<!-- Tests d'intégration. Par défaut, IT, ITCase, ... -->
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+~~~
+
+:::info Info
+
+3 blocks surlignés ont été ajouté pour ajouter les dépendances Spring
+- L'héritage du projet spring-boot-starter-parent.
+- Les dépendances minimales pour le fonctionnement de Spring Batch.
+- L'utilisation du plugin `Spring-boot-maven-plugin`.
+
+Le reste du pom concerne 3 plugins relatifs aux tests :
+- `build-helper-maven-plugin` : `src/it/resources n'étant pas reconnu par maven, il aura à sa charge la copie des sources/resources IT
+- `maven-surefire-plugin` : ayant à sa charge le lancement des tests unitaires
+- `maven-failsafe-plugin` : ayant à sa charge le lancement des tests d'intégration.
+:::
+
+### Configuration Java
+
+Nous allons modifier la classe principale `TutorialSpringBatchApplication` comme ceci :
+
+```jsx {3,4,9,20} title="diff fr/goro/tutorial/spring/batch/TutorialSpringBatchApplication.java"
+package fr.goro.tutorial.spring.batch;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * Classe main de l'application.
+ */
+@SpringBootApplication
+public class TutorialSpringBatchApplication {
+
+    /**
+     * Méthode principale de l'application : point d'entrée.
+     *
+     * Lancement du traitement batch.
+     *
+     * @param args les arguments passé en paramétre de l'application.
+     */
+    public static void main(String[] args) {
+        System.exit(SpringApplication.exit(SpringApplication.run(TutorialSpringBatchApplication.class, args)));
+    }
+}
+```
+
+:::note
+
+La mise en oeuvre de la méthode `main` s'appuie sur l'exemple données par Spring sur son [guide de mise en oeuvre de Spring Batch](https://spring.io/guides/gs/batch-processing/)
+
+:::
+
+## Lancement de l'application
+
+### Méthode de lancement
+
+Plusieurs méthode de lancement sont possibles :
+
+#### Terminal
+
+Via un terminal, depuis votre workspace, vous pouvez taper :
+
+- Lancement de l'application :
+
+```shell
+java -jar target/tutorial-spring-batch-0.0.1-SNAPSHOT.jar
+```
+
+De cette manière, `Spring` lancera l'ensemble des `Job` qu'il trouvera.
+
+Pour les besoins du TP, nous utiliserons le `CommandLineRunner` proposé par `Spring`, il nous permettra de lancer notre batch en précisant le fichier de configuration `Java` utilisé.
+[La documentation officiel de `Spring` à ce sujet](https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#runningJobsFromCommandLine)
+
+```bash
+java -jar CommandLineJobRunner fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchConfiguration myFirstJob
+```
+
+#### Launcher
+
+La majorité des IDE propose différent Launcher permettant de lancer des applications, au choix :
+- Java Application.
+- Spring Boot App (dépend généralement d'un plugin supplémentaire relatif à l'IDE utilisé).
+
+Comme pour le terminal, et pour les besoins du TP, nous utiliserons le `CommandLineRunner`, pensez donc à ajouter ce qui suit en argument de votre Launcher :
+
+```text title="Paramétre de Launcher"
+CommandLineJobRunner fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchConfiguration myFirstJob
+```
+
+### Résultat
+
+```text title="Résultat de la commande"
+...
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.5.4)
+
+2021-09-08 00:40:22.022  INFO 301368 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : Starting TutorialSpringBatchApplication using Java 11.0.11 on goro-XPS-15-9560 with PID 301368 (/home/goro/Documents/workspace/tutorial-spring-batch/target/classes started by goro in /home/goro/Documents/workspace/tutorial-spring-batch)
+2021-09-08 00:40:22.027  INFO 301368 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : No active profile set, falling back to default profiles: default
+2021-09-08 00:40:24.415  INFO 301368 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-09-08 00:40:25.062  INFO 301368 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-09-08 00:40:25.658  INFO 301368 --- [           main] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: H2
+2021-09-08 00:40:26.152  INFO 301368 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+```
+
+Nous avons lancer notre traitement au travers d'un contexte `Spring`.
+
+## Conclusion
+
+A cette étape, nous avons créé notre première coquille vide `Spring`, la structure est désormais prête à accueillir un premier traitement.
