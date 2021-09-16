@@ -80,7 +80,7 @@ module.exports = {
           remarkPlugins: [require('mdx-mermaid'), { mermaid: { theme: 'dark' } }],
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
+          editUrl: 'https://github.com/GoroGoraK/docusaurus-test',
         },
         blog: {
           showReadingTime: true,

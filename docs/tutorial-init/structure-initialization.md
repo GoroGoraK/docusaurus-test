@@ -4,15 +4,17 @@ sidebar_position: 1
 
 # Structure du projet
 
-Nous partirons from scratch, de ce fait, commençons par créer un nouveau projet `Maven` dans le répertoire de travail.
+Nous partirons from _scratch_, de ce fait, commençoez par créer **un nouveau projet _Maven_** dans votre répertoire de travail.
 
-Plusieurs méthodes sont possibles pour créer un projet `Maven` :
+Plusieurs méthodes sont possibles pour créer un projet _Maven_ :
 
 - [Spring Init](https://start.spring.io/) qui permet, via une interface simple, d'initialiser un projet Spring avec un large choix de dépendance.
 - Utiliser un [archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html) mvn spécifique à Spring Batch (comme par exemple, [celui-ci](https://mvnrepository.com/artifact/org.springframework.batch/spring-batch-archetypes)).
 - A la main.
 
-C'est cette dernière qui sera présentée ici, elle sera toute aussi rapide.
+:::note
+C'est cette dernière qui sera présentée ici, elle sera toute aussi rapide pour notre tutoriel.
+:::
 
 ## Objectifs
 

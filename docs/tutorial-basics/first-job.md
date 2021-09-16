@@ -65,17 +65,17 @@ Voici la structure à atteindre lors de cette partie :
 ┗ 📜pom.xml
 ```
 
-## Préambule
-
 :::caution Attention
 La structure de package présentée ici n'est qu'un exemple, il convient de l'adapter en fonction des clients / besoin.
 :::
 
+## Préambule
+
 On retrouve dans le code source (`src/main/java`) deux sous packages principaux :
 
 - config 
-  - Il contiendra uniquement des méthodes permettant la définition de _@Bean_ _Spring_
-  - Il pourra contenir des fichiers suffixés de _Configuration_ (ou _Config_) pour la définition des @Bean et _Properties_ (ou _Property_) pour la définition d'objet de propriétés définies dans l'_application.yml_
+  - Il contiendra **uniquement des méthodes permettant la définition de _@Bean_ _Spring_**
+  - Il pourra contenir des fichiers suffixés de _Configuration_ (ou _Config_) pour la définition des _@Bean_ et _Properties_ (ou _Property_) pour la définition d'objet de propriétés définies dans l'_application.yml_
   - Il ne contiendra aucune logique métier, uniquement de la définition de _@Bean_ / properties.
   - On s'appuiera autant que possible sur des _class_ _Spring_ afin de minimiser le code source à développer au sein des autres _package_
 
@@ -94,9 +94,7 @@ Spring charge automatiquement les propriétés déclarées dans l'application.ym
 Commençons par la configuration _YAML_ (au format YML). Nous allons y déclarer le chemin vers un fichier à lire.
 
 ```yaml title="application.yml"
-
 inputFile: /chemin/vers/fichier_traiter.txt
-
 ```
 
 :::caution Attention

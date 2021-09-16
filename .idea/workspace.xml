@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0881036a-7832-41b9-a292-54f2ce78ef51" name="Changes" comment="Avancement sur premier batch" />
+    <list default="true" id="0881036a-7832-41b9-a292-54f2ce78ef51" name="Changes" comment="Avancement sur premier batch">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/intro.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/intro.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docusaurus.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/docusaurus.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,6 +26,7 @@
     </file-type-list>
   </component>
   <component name="ProjectId" id="1wKWBQX0M9mEp3objqb1HX33GnB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -29,7 +37,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/static/img/datasource" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -55,6 +63,7 @@
       <updated>1628207624534</updated>
       <workItem from="1628207626578" duration="1882000" />
       <workItem from="1630270548458" duration="139928000" />
+      <workItem from="1631793501512" duration="11117000" />
     </task>
     <servers />
   </component>
@@ -66,11 +75,20 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ID_WIDTH">
+                <map>
+                  <entry key="Table.Default.Author.ColumnIdWidth" value="45" />
+                  <entry key="Table.Default.Date.ColumnIdWidth" value="45" />
+                  <entry key="Table.Space.CommitStatus.ColumnIdWidth" value="44" />
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Avancement sur premier batch" />
