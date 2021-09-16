@@ -6,12 +6,12 @@ module.exports = {
   title: 'Tp Spring Batch',
   tagline: 'Spring Batch are cool :-)',
   url: 'https://github.com',
-  baseUrl: '/tutorial-spring-batch/',
+  baseUrl: '/docusaurus-test/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'GoroGoraK',
-  projectName: 'tutorial-spring-batch',
+  projectName: 'docusaurus-test',
   trailingSlash: false,
   themeConfig: {
     navbar: {
