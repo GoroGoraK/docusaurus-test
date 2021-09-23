@@ -2,17 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0881036a-7832-41b9-a292-54f2ce78ef51" name="Changes" comment="Avancement sur premier batch">
-      <change afterPath="$PROJECT_DIR$/docs/tutorial-conditional/_category_.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/tutorial-conditional/manage-docs-versions.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/tutorial-performance/_category_.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/tutorial-performance/manage-docs-versions.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-api/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-api/api.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-database/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-database/database_intro.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-database/database_jdbc.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-database/database_jpa.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-database/database_repositories.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-file/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-file/file_csv.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-file/file_intro.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-file/file_json.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-file/file_xml.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-lot/lot-intro.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-tips/launcher.mdx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-tips/spring-profile.mdx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/datasource.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/datasource.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/intro.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/intro.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/first-test.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-test.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/profile.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/profile.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/profile.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-conditional/manage-docs-versions.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-extras/_category_.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-lot/_category_.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-extras/manage-docs-versions.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-extras/translate-your-site.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-init/spring-initialization.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-init/spring-initialization.mdx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/custom.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-performance/_category_.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-performance/manage-docs-versions.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-conditional/decider.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/congratulations.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/create-a-blog-post.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/create-a-document.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/create-a-page.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/deploy-your-site.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/init-import-project.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-tips/init-import-project.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/markdown-features.mdx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/test.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-tips/test2.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,17 +73,17 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/docs/tutorial-performance" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/docs/tutorial-lot/lot-api" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/tutorial-lot/lot-api" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-lot/lot-database" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-lot/lot-file" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-tips" />
       <recent name="$PROJECT_DIR$/docs/tutorial-performance" />
-      <recent name="$PROJECT_DIR$/docs/tutorial-conditional" />
-      <recent name="$PROJECT_DIR$/static/img" />
-      <recent name="$PROJECT_DIR$/static/img/datasource" />
-      <recent name="$PROJECT_DIR$/docs/tutorial-basics" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/static/img/datasource" />
@@ -75,6 +103,7 @@
       <workItem from="1630270548458" duration="139928000" />
       <workItem from="1631793501512" duration="32240000" />
       <workItem from="1632166514282" duration="37615000" />
+      <workItem from="1632396399736" duration="18472000" />
     </task>
     <servers />
   </component>

@@ -8,7 +8,7 @@ Nous partirons from _scratch_, de ce fait, commençez par créer **un nouveau pr
 
 Plusieurs méthodes sont possibles pour créer un projet _Maven_ :
 
-- [Spring Init](https://start.spring.io/) qui permet, via une interface simple, d'initialiser un projet Spring avec un large choix de dépendance.
+- [Spring Init](https://start.spring.io/) qui permet, via une interface simple, d'initialiser un projet Java/Maven/Spring avec un large choix de dépendance.
 - Utiliser un [archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html) mvn spécifique à Spring Batch (comme par exemple, [celui-ci](https://mvnrepository.com/artifact/org.springframework.batch/spring-batch-archetypes)).
 - A la main.
 
@@ -18,7 +18,7 @@ C'est cette dernière qui sera présentée ici, elle sera toute aussi rapide pou
 
 ## Objectifs
 
-L'object de cette partie sera de créer pas à pas une coquille de projet `Maven` fonctionnelle.
+L'object de cette partie sera de créer pas à pas une coquille de projet _Maven_ fonctionnelle.
 
 Voici la structure à réaliser :
 
@@ -71,7 +71,7 @@ mkdir -p src/main/java src/main/resources src/test/java src/test/resources src/i
 
 :::note Note
 
-Note: Vous aurez remarqué l'utilisation de sous dossier `java`/`resources` dans le package `it`, contrairement à la documentation Maven que vous vous étes empressés de lire (:stuck_out_tongue_winking_eye:), nous verrons plus tard l'intêret et l'impact de cette action ultérieurement dans le TP.
+Note: Vous aurez remarqué l'utilisation de sous dossier `java`/`resources` dans le package `it`, contrairement à la documentation Maven que vous vous étes empressés de lire (:stuck_out_tongue_winking_eye:), nous verrons plus tard l'intêret et l'impact de cette action ultérieurement dans le tutoriel.
 
 :::
 
@@ -83,7 +83,7 @@ Vous pouvez créer le fichier `pom.xml` à la racine de votre projet *tutorial-s
 vi pom.xml
 ```
 
-~~~xml
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -97,9 +97,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
         <java.version>11</java.version>
     </properties>
 </project>
-~~~
+```
 
-:::tip astuce
+:::tip astuceConfiguration Java#
 
 Sous l'outils d'édition `vi` 
 
@@ -111,15 +111,9 @@ Sous l'outils d'édition `vi`
 
 :::
 
-Le pom est le plus minimaliste qui soit.
+Le pom est le plus minimaliste qui soit !
 
-:::note Note
-
-Ce pom est inspiré de la [documentation officielle Spring Batch](https://spring.io/guides/gs/batch-processing/) généré via [Spring Initializr](https://start.spring.io/).
-
-:::
-
-:::info Pour aller plus loin
+:::note Pour aller plus loin
 
 Pour creuser le sujet du `pom.xml` (héritage, aggrégration, ...), la documentation officielle est par [ici](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html).
 
@@ -161,7 +155,7 @@ public class TutorialSpringBatchApplication {
 
 ## Test de l'application
 
-A cette étape, nous n'allons pas encore développer de test automatisé, néanmoins,
+A cette étape, nous n'allons pas encore développer de test automatisé (oui, promis, nous ferons du test automatisé avec JUnit ... :smile:), néanmoins,
 nous pouvons nous assurer que notre application fonctionne.
 
 - Construction de l'application :

@@ -216,8 +216,25 @@ Comme nous l'avons vu lors de la création de la structure, nous utilisons un ch
             </configuration>
         </execution>
     </executions>
+
+    <!-- Testing -->
+    <!-- Tests unitaires. Par défaut, Test, ... -->
+    <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+    </plugin>
+
+    <!-- Tests d'intégration. Par défaut, IT, ITCase, ... -->
+    <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+    </plugin>
 </plugin>
 ```
+
+:::info
+- `build-helper-maven-plugin` : `src/it/resources n'étant pas reconnu par maven, il aura à sa charge la copie des sources/resources IT
+- `maven-surefire-plugin` : ayant à sa charge le lancement des tests unitaires
+- `maven-failsafe-plugin` : ayant à sa charge le lancement des tests d'intégration.
+:::
 
 ### Développement _Java_
 

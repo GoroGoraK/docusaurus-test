@@ -6,9 +6,12 @@ sidebar_position: 1
 
 Bienvenue à vous sur le tutoriel _Spring Batch_ !
 
-Avant de parler tout de suite de technique (:unamused:), nous allons définir l'objectif global de ce tutoriel et nous assurer que que vous êtes prêt à suivre les différentes étapes de ce tutoriel.
+Avant de parler tout de suite de technique (:unamused:), nous allons définir l'objectif global de ce tutoriel 
+et nous assurer que que vous êtes prêt à en suivre les différentes étapes.
 
 Puis nous aborderons théoriquement (:weary:) le fonctionnement des batchs _Spring_.
+
+Enfin, nous serons prêt à mettre les mains dans le code :smiley:
 
 :::info
 Ce contenu s'appuie en grande partie sur la [documentation officielle de _Spring Batch_](https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html).
@@ -16,7 +19,7 @@ Ce contenu s'appuie en grande partie sur la [documentation officielle de _Spring
 N'hésitez pas à commenter, critiquer, améliorer, proposer des cas que vous aimeriez voir dans ce tutoriel en envoyant un mail [ici](mailto:gregory.lengagne@gmail.com?subject=[Tuto%20SpringBatch])
 :::
 
-## Objectifs
+## Objectif global
 
 L'objectif global de ce tutoriel est de présenter le fonctionnement, ainsi qu'un ensemble de bonne pratique autour, du framework _Spring Batch_.
 
@@ -36,13 +39,14 @@ Pour cette partie d'introduction, nous nous contenterons que d'un minimum de th�
 - Une connaissance des concepts objets **_Spring_** est souhaitable.
 :::
 
-## Concept de base
+## Un peu de thérie...
 
 ### Pourquoi Spring Batch
 
-Le framework _Spring Batch_ offre un cadre de développement axé sur le traitement métier plus ou moins complexe d'un **large volume** de données.
+Le framework _Spring Batch_ offre un cadre de développement axé sur le **traitement métier** plus ou moins complexe **d'un large volume de données**.
 
-Son fonctionnement s'appuie sur différents outils qu'il convient de connaitre, c'est ce que nous allons explorer tout au long de ce tutoriel.
+Son fonctionnement s'appuie sur différents outils qu'il convient de connaitre et d'apprendre à utiliser, 
+c'est ce que nous allons explorer tout au long de ce tutoriel.
 
 ### Fonctionnement de Spring Batch
 
@@ -58,7 +62,9 @@ L'ensemble de ces éléments communiquent avec un _JobRepository_ qui stocke les
 
 #### JobLauncher
 
-Le _JobLauncher_ est l'objet utilisé par _Spring_ pour lancer notre _Job_, il sera auto configuré par l'annotation `@EnableBatchProcessing`.
+Le _JobLauncher_ est l'objet utilisé par _Spring_ pour lancer notre _Job_ 
+
+Il sera auto configuré par l'annotation `@EnableBatchProcessing`, qu'on placera de préférence sur la _classe_ de configuration globale, ou sur la _classe_ contenant la méthode _main_.
 
 #### Job
 
@@ -73,9 +79,9 @@ Le `@Bean` _Step_ sera l'objet à configurer pour définir un traitement.
 On peut distinguer deux approches s'appuyant sur différents outils pour développer une _Step_ :
 
 - Approche par _Tasklet_
-  - Une tasklet représente une tâche bien défini (ex : Vérifier un dossier, lire un fichier, ...)
+  - Une tasklet représente une tâche bien définie (ex : Vérifier la présence, ou le contenu d'un dossier en entrée, ...)
   - Une _Step_ est composée d'une seule _Tasklet_
-  - L'enchainement des traitements au sein d'une Tasklet se fait les unes après les autres
+  - L'enchainement des traitements au sein d'une _Tasklet_ se fait les unes après les autres
 
 - Approche par _chunks_
   - Traitement par lot (ex : X premières lignes, puis X lignes suivantes, ...)
@@ -84,64 +90,13 @@ On peut distinguer deux approches s'appuyant sur différents outils pour dévelo
 #### JobRepository
 
 L'ensemble de ces outils propre à _Spring Batch_ s'appuie sur un _JobRepository_, il s'agit du _repository_ de lecture / écriture de la grappe de _metadata_ (grappe qu'on verra plus tard dans le tutoriel).
+Il sera aussi auto configuré par l'annotation `@EnableBatchProcessing`
 
 :::info Info
 - Un glossaire expliquant chaque outils est disponible [ici](https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#glossary).
 :::
 
-## Sujets abordés
-
-- Initialisation : Création d'un premier batch `Spring`
-  
-  - Structure du projet : Création d'une application `Java` avec `Maven`.
-  
-  - Configuration Spring : Chargement du context `Spring`.
-  
-- Premier batch : Mise en place d'un premier batch `Spring` composé d'une `Tasklet`.
-
-  - Mon premier `Job`
-
-    - Configuration Spring : Découverte des `Bean` Spring Batch :
-      - `Tasklet` : Création et configuration de la première `Taklet`.
-      - `Step` : Configuration de la première `Step` composée de notre première `Tasklet`.
-      - `Job` : Configuration du premier `Job` composé de notre première `Step`.
-  
-    - Testing : Ajout de test `JUnits`
-      - Test Unitaire (TU) : Ajout de test sans contexte `Spring`.
-      - Test d'Intégration (TI) : Ajout de test avec contexte `Spring`.
-
-- Traitement par lot : Ajout d'un traitement de fichier.
-
-  - DataSource : Définition basique d'une base de données
-    - Mono DataSource
-    - Multi DataSource
-
-  - Ajout d'un traitement par lot (`Chunck`) au batch
-    - Traitement d'un fichier `XML`
-
-- Listener : Ajout de log, vérification de traitement
-
-  - JobListener
-    - Traitement pré-batch
-    - Traitement post-batch
-
-  - StepListener
-    - Vérification de traitement
-    - Traitement des erreurs
-    - 
-- Traitement des erreurs : Amélioration du premier batch
-
-  - Configuration _Job_ / _Step_
-
-  - Découverte des listeners
-
-  - Filtre des erreurs
-
-  - Politique de relance des batchs
-
-  - Paramètres du batch / `JobParameter`
-    - Définition de paramètres d'entrée
-    - Passage d'information dans les paramètres du Job
+## Et c'est parti !
 
 Nous allons pouvoir attaquer les choses sérieuses ! Vous pouvez commencer à dépiler les différentes parties de ce tutoriel.
 

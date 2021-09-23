@@ -368,8 +368,18 @@ De cette manière, _Spring_ lancera l'ensemble des _Job_ qu'il trouvera.
 Pour les besoins du TP, nous utiliserons le _CommandLineRunner_ proposé par _Spring Batch_, il nous permettra de lancer notre batch en précisant le fichier de configuration _Java_ utilisé et le nom du _Job_ à lancer.
 [La documentation officiel de `Spring` à ce sujet](https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#runningJobsFromCommandLine)
 
-```bash
+```shell
 java -jar target/tutorial-spring-batch-0.0.1-SNAPSHOT.jar CommandLineJobRunner fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchConfiguration myFirstJob
+```
+
+```shell-session
+$ ls
+some output
+```
+
+```console
+foo@bar:~$ whoami
+foo
 ```
 
 #### Launcher
