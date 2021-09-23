@@ -15,17 +15,34 @@ Cette _Tasklet_ devra lire un fichier en entrée à partir d'un chemin absolu d�
 Voici le traitement à mettre en place.
 
 ```mermaid
-sequenceDiagram
-  participant JL as JobLauncher
-  participant J as myFirstJob
-  participant S as myFirstSteo
-  participant T as myFirstTasklet
-  JL->>J: Lance
-  J->>S: Execute
-  S->>T: Execute
-  Note right of T: Log dans la console.
+stateDiagram-v2
+  direction LR
+  Traitement: Spring Batch Context
+  [*] --> myFirstJob : 1
+  state Traitement {
+    direction LR
+    JobTraitement:  Job Execution Context _
+      state JobTraitement {
+        direction LR
+        myFirstJob --> myFirstStep : 2
+        StepExecutionContext : Step Execution Context
+        state StepExecutionContext {
+          myFirstStep --> myFirstTasklet : 3
+          note right of myFirstTasklet 
+              Log le contenu d'un fichier 
+              dans la console dans la console
+          end note
+        }
+      }
+    }
+    myFirstJob --> [*] : 4
 ```
 
+1. Lancement de notre _Job_ via _Launcher_ ou _Command Line_.
+2. Lancement de notre _Step_ via notre _Job_.
+3. Lancement de note _Tasklet_ via notre _Step_.
+   1. Log dans la console.
+4. Fin de traitement.
 ### Structure Physique
 
 Voici la structure à atteindre lors de cette partie :
@@ -79,9 +96,18 @@ On retrouve dans le code source (`src/main/java`) deux sous packages principaux 
   - Il ne contiendra aucune logique métier, uniquement de la définition de _@Bean_ / properties.
   - On s'appuiera autant que possible sur des _class_ _Spring_ afin de minimiser le code source à développer au sein des autres _package_
 
+:::tip Best Practice
+- Ce package est la base de notre traitement, c'est dans ce package que nous définirons les objets (`@Bean`) que _Spring Batch_ devra utiliser pour réaliser le traitement.
+- On utilise autant que possible des objets _Spring Batch_ pour définir nos `@Bean`.
+:::
+
 - tasklet
-  - Il contiendra uniquement le développement métier de nos tasklets.
-  - Une tasklet implémente l'interface _Spring_ _Tasklet_
+  - Il contiendra uniquement le développement métier de nos _tasklets_.
+  - Une _tasklet_ implémente l'interface _Spring_ `Tasklet` et est suffixée de _Tasklet_.
+
+:::danger Bad Practice
+- Ne jamais utiliser d'annotation dans une classe de traitement. Pour un batch _Spring_, les annotations ne seront acceptées que dans la classe main du batch, ainsi que dans le package _config_.
+:::
 
 Nous découvrirons d'autres _package_ dans les différentes parties du tutoriel.
 
@@ -98,33 +124,25 @@ inputFile: /chemin/vers/fichier_traiter.txt
 ```
 
 :::caution Attention
-Le chemin contenu dans la variable `inputFile` doit être modifié.
+Le chemin contenu dans la variable `inputFile` doit être modifié. Vous pouvez créer un dossier spécifique pour ce tutorial, puis sous dossier pour ce batch (ex : ~/Documents/tutoriel_springbatch/firstbatch_).
 :::
 
-Une fois le fichier créé, nous allons pouvoir créer notre `Tasklet`.
+Une fois le fichier créé, nous allons pouvoir créer notre tasklet.
 
 ## Première Tasklet
 
-:::info
-- Le logger utilisé sera celui par défaut ([logback](https://logback.qos.ch/manual/introduction.html) : `org.slf4j.Logger`), de ce fait, aucune configuration ne sera nécessaire.
-:::
+La tasklet lira simplement le contenu d'un fichier et le logguera en info (par défaut, dans la sortie standard : notre bonne vieille console !).
 
-:::note Détail pour la réalisation du TP
-
-- La tasklet lira le contenu d'un fichier (pensez à un attribut de type `Resource`) et le logguera en info (par défaut, dans la sortie standard : notre bonne vieille console !).
-
-- Notre tasklet devra implémenter l'objet Spring Batch `Tasklet`, vous pouvez vous inspirer de la [documentation officielle](partie Tasklet)[https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#exampleTaskletImplementation]].
-
-:::
+Le traitement d'une tâche type _Tasklet_ étant propre à un besoin précis, il n'existe pas d'implémentation prévu par le framework, de ce fait, une _tasklet_ doit définir la méthode _execute_ de l'interface `Takslet`.
 
 <details>
 <summary>
-<a class="btnfire small stroke"><em class="fas fa-chevron-circle-down"></em>Voir la soluce</a>
+<a class="btnfire small stroke"><em class="fas fa-chevron-circle-down">Voir le code source</em></a>
 </summary>
 
 ```jsx title="fr.goro.tutorial.spring.batch.firstbatch.tasklet.FirstTasklet.java"
 
-package fr.goro.tutorial.spring.batch.firstbatch.tasklet.;
+package fr.goro.tutorial.spring.batch.firstbatch.tasklet;
 
 import java.nio.file.Files;
 import java.util.stream.Collectors;
@@ -178,27 +196,28 @@ public class FirstTasklet implements Tasklet {
 
 ```
 
-</details>
-
-:::tip Best Practice
-Ne jamais utiliser d'annotation dans une classe de traitement. Pour un batch _Spring_, les annotations ne seront acceptées que dans la classe main du batch, ainsi que dans le package _config_.
+:::note
+- Utilisation du logguer par défaut ([logback](https://logback.qos.ch/manual/introduction.html) via le `Logger` de [_slf4j_](http://www.slf4j.org/manual.html)) en constante.
+- Déclaration d'une `Resource` _Spring_, le fichier sur lequel notre _Tasklet_ devra travailler.
+- Le constructeur prend en paramètre le fichier en entrée, en bonne pratique ici, nous vérifions que la resource passée en paramètre est non _null_. Pour ce genre de contrôle technique,`Assert` de _Spring Batch_ fait très bien l'affaire.
+- L'implémentation du code métier de notre _Tasklet_, ici: 
+  - Elle loggue en _info_ le contenu du fichier `Resource` de notre _Tasklet_.
+  - Elle indique qu'elle a terminé le traitement.
 :::
+
+</details>
 
 ## Première Step
 
-:::tip Best Practice
-- Nous définissons nos @Bean dans un package _config_ (ou _configuration_), il n'y a que dans ce package qu'on utilisera des annotations (autre que `@SpringBootApp` sur la main class).
+Une _class_ de configuration _Spring_ est annotée d'une annotation **`@Configuration`** qui indique au framework de mettre à disposition du traitement les **`@Bean`** qui y sont définis.
 
-- _Spring_ gère très bien l'injection de _Resource_ via un simple @Value("${maVariabke}").
+Une **_Step_** est un **`@Bean`** de type **`Step`**, pour notre exemple ici, elle ne fera qu'exécuter notre _tasklet_.
 
-- L'utilisation de JavaDoc est obligatoire :wink:.
-:::
-
-A l'aide de la documentation officielle, tentez de créer votre première configuration de _Step_
+Une **_tasklet_** est un **`@Bean`** de type **`Tasklet`**, il s'agira de retourner une nouvelle instance de la _tasklet_ que nous avons développé plus tôt.
 
 <details>
 <summary>
-<a class="btnfire small stroke"><em class="fas fa-chevron-circle-down"></em></a>
+<a class="btnfire small stroke"><em class="fas fa-chevron-circle-down">Voir le code source</em></a>
 </summary>
 
 ```jsx title="fr.goro.tutorial.spring.batch.firstbatch.config.step.FirstTaskletStepConfiguration.java"
@@ -252,25 +271,26 @@ public class FirstTaskletStepConfiguration {
 
 ```
 
+:::note
+- Nous avons nommé notre classe _FirstTaskletStep**Configuration**_ car elle contiendra la configuration de toute notre première _step_. Il convient de nommer correctement les classes de configuration en se référant aux normes en vigueurs liées à votre environnement de développement.
+- On y retrouve la déclaration de deux `@Bean` **nommé précisément (nom de méthode)**:
+  - **myFirstStep**
+    - La méthode de définition prend deux paramètres :
+      - un `StepBuilderFactory`, notre constructeur de _step_, il est injecté automatiquement par le framework.
+      - une `Tasklet` nommé _**myFirstTasklet**_.
+    - A partir de ces paramètres, la factory créé la `Step` (composé de la _tasklet_, via _.tasklet()_) qu'il nommera _myFirstStep_ (_get("myFirstStep")_) dans son contexte.
+  - **myFirstTasklet**
+    - La méthode de définition prend un paramètre :
+      - une `Resource` injectée automatiquement par le framework, qui se basera sur le path défini dans la variable _**inputFile**_.
+:::
+
 </details>
 
 ## Premier Job
 
-:::danger Interdit
-- Il s'agit d'une partie "Configuration", aucune logique métier ne doit être présente, on n'utilise autant que possible des objets `Spring Batch` pour définir nos `@Bean`.
-:::
+Il s'agit toujours d'une classe de configuration, elle sera donc annotée de **_@Configuration_** et contiendra la définition de **_@Bean_**
 
-:::note Détail pour la réalisation du TP
-
-- Création d'un `@Bean` de type `Job` ([Documentation officielle](https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#configuringAJob)).
-
-:::
-
-:::info Info
-
-- Il s'agit ici de la classe principale de configuration de notre batch, nous conviendrons d'ajouter l'`@EnableBatchProcessing` permettant entre autre la configuration du JobRepository nécessaire au fonctionnement de `Spring Batch` ici.
-
-:::
+Un **_Job_** est un **`@Bean`** de type **`Job`**, pour notre exemple, il ne fera qu'exécuter notre première _step_.
 
 <details>
 <summary>
@@ -299,13 +319,13 @@ public class FirstBatchConfiguration {
      * Définition de notre {@link Job}.
      *
      * @param jobBuilderFactory la factory de construction de {@link Job}
-     * @param myFirstStep notre première {@link} step composée de notre première tasklet.
+     * @param myFirstStep notre première {@link Step} composée de notre première tasklet.
      * @return notre premier {@link Job} Spring Batch.
      */
     @Bean
     public Job myFirstJob(final JobBuilderFactory jobBuilderFactory, final Step myFirstStep) {
         return jobBuilderFactory.get("myFirstJob")
-                .start(myFirstStep)
+                .start(myFirstJob)
                 .build();
     }
 
@@ -313,13 +333,25 @@ public class FirstBatchConfiguration {
 
 ```
 
+:::note
+- Nous avons nommé notre classe _FirstBatch**Configuration**_ car elle contiendra uniquement la configuration de notre première traitement batch. Il convient de nommer correctement les classes de configuration en se référant aux normes en vigueurs liées à votre environnement de développement.
+- On y retrouve la déclaration d'un `@Bean` **nommé précisément (nom de méthode)**:
+  - **myFirstJob**
+    - La méthode de définition prend deux paramètres :
+      - un `JobBuilderFactory`, notre constructeur de _job_, il est injecté automatiquement par le framework.
+      - une `Step` nommé _**myFirstStep**_.
+    - A partir de ces paramètres, la factory créé le `Job` qu'il nommera _myFirstJob_ (_get("myFirstJob")_) dans son contexte.
+:::
+
 </details>
+
+Et voila tout ! Notre premier _Job_ est terminé ! Nous pouvons désormais tester son lancement en local.
 
 ## Test de l'application
 
 ### Méthode de lancement
 
-Plusieurs méthode de lancement sont possibles :
+Plusieurs méthodes de lancement sont possibles :
 
 #### Terminal
 
@@ -331,9 +363,9 @@ Via un terminal, depuis votre workspace, vous pouvez taper :
 java -jar target/tutorial-spring-batch-0.0.1-SNAPSHOT.jar
 ```
 
-De cette manière, `Spring` lancera l'ensemble des `Job` qu'il trouvera.
+De cette manière, _Spring_ lancera l'ensemble des _Job_ qu'il trouvera.
 
-Pour les besoins du TP, nous utiliserons le `CommandLineRunner` proposé par `Spring`, il nous permettra de lancer notre batch en précisant le fichier de configuration `Java` utilisé.
+Pour les besoins du TP, nous utiliserons le _CommandLineRunner_ proposé par _Spring Batch_, il nous permettra de lancer notre batch en précisant le fichier de configuration _Java_ utilisé et le nom du _Job_ à lancer.
 [La documentation officiel de `Spring` à ce sujet](https://docs.spring.io/spring-batch/docs/current/reference/html/index-single.html#runningJobsFromCommandLine)
 
 ```bash
@@ -346,11 +378,23 @@ La majorité des IDE propose différent Launcher permettant de lancer des applic
 - Java Application.
 - Spring Boot App (dépend généralement d'un plugin supplémentaire relatif à l'IDE utilisé).
 
-Comme pour le terminal, et pour les besoins du TP, nous utiliserons le `CommandLineRunner`, pensez donc à ajouter ce qui suit en argument de votre Launcher :
+Pour les besoins du TP, nous utiliserons le `CommandLineRunner`, pensez donc à ajouter ce qui suit en argument de votre Launcher :
 
 ```text title="Paramétre de Launcher"
 CommandLineJobRunner fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchConfiguration myFirstJob
 ```
+
+:::tip Bonne Pratique
+Prenez le temps de configurer correctement votre IDE lorsque vous étes amenés à travailler sur un même sujet :
+- Utilisez un maximum de launcher pré configuré.
+- Nommez les correctement pour les retrouver facilement.
+- Configuré des launchers en favori sur vos sujets les plus récurrents.
+
+Ici, on pourrait imaginer 
+- un launcher _Maven_ pour exécuter un _mvn clean install_ en favori.
+- un launcher _Spring Boot_ pour exécuter une application _Spring_.
+- un launcher _Java_ pour exécuter un _java -jar_.
+:::
 
 ### Analyse de log
 
@@ -364,17 +408,17 @@ CommandLineJobRunner fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchC
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v2.5.4)
 
-2021-09-01 23:01:38.200  INFO 192067 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : Starting TutorialSpringBatchApplication using Java 11.0.11 on goro-XPS-15-9560 with PID 192067 (/home/goro/Documents/workspace/tutorial-spring-batch/target/classes started by goro in /home/goro/Documents/workspace/tutorial-spring-batch)
-2021-09-01 23:01:38.206  INFO 192067 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : No active profile set, falling back to default profiles: default
-2021-09-01 23:01:40.612  INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2021-09-01 23:01:41.193  INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2021-09-01 23:01:41.814  INFO 192067 --- [           main] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: H2
-2021-09-01 23:01:42.305  INFO 192067 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
-2021-09-01 23:01:42.574  INFO 192067 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : Started TutorialSpringBatchApplication in 5.969 seconds (JVM running for 7.069)
-2021-09-01 23:01:42.579  INFO 192067 --- [           main] o.s.b.a.b.JobLauncherApplicationRunner   : Running default command line with: [CommandLineJobRunner, fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchConfiguration, myFirstJob]
-2021-09-01 23:01:42.735  INFO 192067 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : Job: [SimpleJob: [name=myFirstJob]] launched with the following parameters: [{}]
-2021-09-01 23:01:42.825  INFO 192067 --- [           main] o.s.batch.core.job.SimpleStepHandler     : Executing step: [readFile]
-2021-09-01 23:01:42.851  INFO 192067 --- [           main] f.g.t.s.b.f.tasklet.FirstTasklet         : Contenu du fichier affichier par My First Tasklet
+INFO 192067 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : Starting TutorialSpringBatchApplication using Java 11.0.11 on goro-XPS-15-9560 with PID 192067 (/home/goro/Documents/workspace/tutorial-spring-batch/target/classes started by goro in /home/goro/Documents/workspace/tutorial-spring-batch)
+INFO 192067 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : No active profile set, falling back to default profiles: default
+INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+INFO 192067 --- [           main] o.s.b.c.r.s.JobRepositoryFactoryBean     : No database type set, using meta data indicating: H2
+INFO 192067 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : No TaskExecutor has been set, defaulting to synchronous executor.
+INFO 192067 --- [           main] f.g.t.s.b.TutorialSpringBatchApplication : Started TutorialSpringBatchApplication in 5.969 seconds (JVM running for 7.069)
+INFO 192067 --- [           main] o.s.b.a.b.JobLauncherApplicationRunner   : Running default command line with: [CommandLineJobRunner, fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchConfiguration, myFirstJob]
+INFO 192067 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : Job: [SimpleJob: [name=myFirstJob]] launched with the following parameters: [{}]
+INFO 192067 --- [           main] o.s.batch.core.job.SimpleStepHandler     : Executing step: [readFile]
+INFO 192067 --- [           main] f.g.t.s.b.f.tasklet.FirstTasklet         : Contenu du fichier affichier par My First Tasklet
 
 ####### ######            #####  ######  ######  ### #     #  #####     ######     #    #######  #####  #     #
    #    #     #          #     # #     # #     #  #  ##    # #     #    #     #   # #      #    #     # #     #
@@ -399,10 +443,10 @@ CommandLineJobRunner fr.goro.tutorial.spring.batch.firstbatch.config.FirstBatchC
 #     #    #       #        #  #   #         #    #          #    #######       # #  #   #       #          #
 #     #    #       #        #  #    #  #     #    #          #    #     # #     # #   #  #       #          #
 #     #    #       #       ### #     #  #####     #          #    #     #  #####  #    # ####### #######    #
-2021-09-01 23:01:42.874  INFO 192067 --- [           main] o.s.batch.core.step.AbstractStep         : Step: [readFile] executed in 47ms
-2021-09-01 23:01:42.887  INFO 192067 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : Job: [SimpleJob: [name=myFirstJob]] completed with the following parameters: [{}] and the following status: [COMPLETED] in 99ms
-2021-09-01 23:01:42.897  INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2021-09-01 23:01:42.908  INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+INFO 192067 --- [           main] o.s.batch.core.step.AbstractStep         : Step: [readFile] executed in 47ms
+INFO 192067 --- [           main] o.s.b.c.l.support.SimpleJobLauncher      : Job: [SimpleJob: [name=myFirstJob]] completed with the following parameters: [{}] and the following status: [COMPLETED] in 99ms
+INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+INFO 192067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 
 ```
 
@@ -419,6 +463,6 @@ En regardant de plus près les log (lignes surlignées) de notre application, on
 
 ## Conclusion
 
-Nous avons désormais un premier _Spring Batch_ fonctionnel, qui nous savons tester à la main de différente manière. 
+Nous avons désormais un premier _Spring Batch_ fonctionnel, que nous savons tester à la main de différente manière. 
 
-Avant de nous intéresser à cette mystérieuse base de données H2, nous allons automatiser les tests de notre application.
+Interessons-nous maintenant à cette mystérieuse datasource.

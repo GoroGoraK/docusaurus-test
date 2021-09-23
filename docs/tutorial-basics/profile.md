@@ -1,16 +1,17 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Profile Spring
 
+:::danger
+Cette partie n'est pas liée à _Spring Batch_, mais au framework _Spring_, le framework permet de gérer différent profile au sein d'un même projet.
+L'utilisation de cette fonctionnalité peut s'avérer très utile lors des développements ou reproduction d'anomalie en locale.
+:::
+
 ## Objectifs
 
-L'objectif de ce TP sera de créer un _batch_ composé d'une seule _Step_ elle même composée d'une _Tasklet_.
-
-Cette _Tasklet_ devra lire un fichier en entrée à partir d'un chemin relatif (au travers du classpath) défini dans le fichier de configuration de l'application et logguer son contenu dans la console.
-
-Voici la structure à atteindre lors de cette partie :
+L'objectif de cette partie sera d'aborder le sujet des profiles _Spring_ en mettant en place un profile de développement.
 
 ```
 📦tutorial-spring-batch
@@ -33,7 +34,8 @@ Voici la structure à atteindre lors de cette partie :
 ┃ ┃ ┃     ┗ 📜TutorialSpringBatchApplication.java
 ┃ ┃ ┗ 📂resources
 ┃ ┃   ┃ ℹ️ Resources de l'application
-┃ ┃   ┗ 📜application.yml
+┃ ┃   ┣ 📜application.yml
+┃ ┃   ┗ 📜application-dev.yml
 ┃ ┣ 📂test
 ┃ ┃ ┣ 📂java
 ┃ ┃ ┃  ℹ️ Code source des tests unitaires de l'application

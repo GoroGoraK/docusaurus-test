@@ -2,8 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0881036a-7832-41b9-a292-54f2ce78ef51" name="Changes" comment="Avancement sur premier batch">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-conditional/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-conditional/manage-docs-versions.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-performance/_category_.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/tutorial-performance/manage-docs-versions.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/datasource.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/datasource.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-job.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/first-test.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/first-test.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-basics/profile.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-basics/profile.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/tutorial-init/structure-initialization.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/custom.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,17 +45,17 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/static/img/datasource" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/docs/tutorial-performance" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/static/img/datasource" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-performance" />
+      <recent name="$PROJECT_DIR$/docs/tutorial-conditional" />
       <recent name="$PROJECT_DIR$/static/img" />
+      <recent name="$PROJECT_DIR$/static/img/datasource" />
       <recent name="$PROJECT_DIR$/docs/tutorial-basics" />
-      <recent name="$PROJECT_DIR$/static/img/tutorial-introduction" />
-      <recent name="$PROJECT_DIR$/static/sources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/static/img/datasource" />
@@ -64,7 +73,8 @@
       <updated>1628207624534</updated>
       <workItem from="1628207626578" duration="1882000" />
       <workItem from="1630270548458" duration="139928000" />
-      <workItem from="1631793501512" duration="12556000" />
+      <workItem from="1631793501512" duration="32240000" />
+      <workItem from="1632166514282" duration="37615000" />
     </task>
     <servers />
   </component>

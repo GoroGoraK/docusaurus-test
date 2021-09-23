@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Structure du projet
 
-Nous partirons from _scratch_, de ce fait, commençoez par créer **un nouveau projet _Maven_** dans votre répertoire de travail.
+Nous partirons from _scratch_, de ce fait, commençez par créer **un nouveau projet _Maven_** dans votre répertoire de travail.
 
 Plusieurs méthodes sont possibles pour créer un projet _Maven_ :
 

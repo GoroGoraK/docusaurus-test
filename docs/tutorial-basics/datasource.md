@@ -19,16 +19,36 @@ Cette partie donnera des premiers éléments sur le modèle de données des meta
 Le traitement cible change légèrement pour l'insertion en base de données du contenu du fichier texte en entrée.
 
 ```mermaid
-sequenceDiagram
-  participant JL as JobLauncher
-  participant J as myFirstJob
-  participant S as myFirstSteo
-  participant T as myFirstTasklet
-  JL->>J: Lance
-  J->>S: Execute
-  S->>T: Execute
-  Note right of T: Log dans la console suivi d'une insertion du contenu en base de données.
+stateDiagram-v2
+  direction LR
+  Traitement: Spring Batch Context
+  [*] --> myFirstJob : 1
+  state Traitement {
+    direction LR
+    JobTraitement:  Job Execution Context _
+      state JobTraitement {
+        direction LR
+        myFirstJob --> myFirstStep : 2
+        StepExecutionContext : Step Execution Context
+        state StepExecutionContext {
+          myFirstStep --> myFirstTasklet : 3
+                    note right of myFirstTasklet 
+              Log le contenu d'un fichier 
+              dans la console dans la console
+              <b>et insère en base de données</b>
+          end note
+        }
+      }
+    }
+    myFirstJob --> [*] : 4
 ```
+
+1. Lancement de notre _Job_ via _Launcher_ ou _Command Line_.
+2. Lancement de notre _Step_ via notre _Job_.
+3. Lancement de note _Tasklet_ via notre _Step_.
+    1. Log dans la console.
+    2. Insert dans la base de données.
+4. Fin de traitement.
 
 ### Structure Physique
 
@@ -59,100 +79,68 @@ Voici la structure à atteindre lors de cette partie :
 ┃ ┃   ┗ 📜 application.yml
 ┃ ┣ 📂test
 ┃ ┃ ┣ 📂java
-┃ ┃ ┃ ┃  ℹ️ Code source des tests unitaires de l'application
-┃ ┃ ┃ ┗🔸fr.goro.tutorial.spring.batch
-┃ ┃ ┃   ┃  ℹ️ Package racine de nos tests unitaires
-┃ ┃ ┃   ┗🔸firstbatch
-┃ ┃ ┃     ┗🔸tasklet
-┃ ┃ ┃       ┗ 📜FirstTaskletTest.java
+┃ ┃ ┃  ℹ️ Code source des tests unitaires de l'application
 ┃ ┃ ┗ 📂resources
-┃ ┃   ┃  ℹ️ Resources des tests unitaires (jeux de données,...)
-┃ ┃   ┗ 📂firstbactch
-┃ ┃      ┗📝fichier_a_traiter.txt
+┃ ┃     ℹ️ Resources des tests unitaires (jeux de données,...)
 ┃ ┗ 📂it
 ┃   ┣ 📂java
-┃   ┃ ┃ ℹ️ Code source des tests d'intégration
-┃   ┃ ┗🔸fr.goro.tutorial.spring.batch
-┃   ┃   ┃ ℹ️ Package racine de nos tests d'intégration
-┃   ┃   ┗🔸firstbatch
-┃   ┃     ┗ 📜TutorialSpringBatchFirstITCase.java
+┃   ┃   ℹ️ Code source des tests d'intégration
 ┃   ┗ 📂resources
-┃     ┃ ℹ️ Resource des tests d'intégration (configuration Spring, ...)
-┃     ┗ 📜application.yml
+┃       ℹ️ Resource des tests d'intégration (configuration Spring, ...)
 ┗ 📜pom.xml
 ```
 
 ## Préambule
 
-Afin de voir visuellement le résultat en base de données, nous allons modifier notre _Tasklet_ pour lui faire insérer en base de données le contenu du fichier après l'avoir loggué.
+Pour de comprendre l'intérêt de cette _datasource_, regardons le traitement cible un peu plus détaillé :
 
-#### Modification de notre première _Tasklet_
-
-:::caution Attention
-Ce code source n'est qu'un exemple simple pour visualiser en base de données le résultat, il ne fait pas office de bon exemple.
-:::
-
-#### Modification de la configuration de notre première _Tasklet_
-
-Nous allons simplement ajouter un attribut _DataSource_ et insérer notre contenu dans la base de données :
-
-```jsx {7-10,16,18,21,27-28,37-43}
-...
-	/**
-	 * Le fichier à traiter.
-	 */
-	private final Resource inputFile;
-
-	/**
-	 * Datasource de traitement.
-	 */
-	private final DataSource datasource;
-
-    /**
-     * Constructeur paramétré de MyFirstTasklet.
-     *
-     * @param inputFile  le fichier à traiter.
-     * @param datasource la datasource de traitement.
-     */
-    public FirstTasklet(final Resource inputFile, final DataSource datasource) {
-        Assert.notNull(inputFile, "Le fichier en entrée de la Tasklet ne peut être vide !");
-        this.inputFile = inputFile;
-        this.datasource = datasource;
-    }
-
-    /**
-     * Méthode de traitement de {@link FirstTasklet}.
-     *
-     * Cette méthode logguera puis stockera en base de données le contenu du fichier
-     * passé en paramétre.
-     *
-     */
-    @Override
-    public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) throws Exception {
-        final String message = Files.lines(inputFile.getFile().toPath()).collect(Collectors.joining("\n"));
-    
-        LOGGER.info(message);
-    
-        // Insertion en base de données.
-        final PreparedStatement prepareStatement = datasource.getConnection()
-            .prepareStatement("insert into info_traitement (message) values (?)");
-        prepareStatement.setString(1, message);
-        prepareStatement.executeUpdate();
-    
-        return RepeatStatus.FINISHED;
-    }
+```mermaid
+flowchart TB
+  subgraph Traitement ["JVM"]
+    direction TB
+    subgraph TrtJava ["&nbsp;"]
+      TutorialSpringBatchApplication ==>|1| JobLauncher
+      subgraph SpringBatchContext ["Spring Batch Application Context"]
+        subgraph JobContext ["Job Application Context"]
+          Job -.- myFirstJob(myFirstJob)
+          Job ==>|2| StepContext
+          subgraph StepContext ["Step Application Context"]
+            direction TB
+            Step -.- myFirstStep(myFirstStep)
+            Step ==>|3| Tasklet
+            Tasklet -.- myFirstTasklet(myFirstTasklet)
+          end
+        end
+        JobLauncher <-.-> JobRepository
+        JobContext <-.-> JobRepository
+        StepContext <-.-> JobRepository
+      end
+    end
+    subgraph DataBase ["&nbsp;"]
+      direction BT
+      JobRepository <-.-> id3[(H2 - Embedded Database)]
+    end
+  end
+  JobLauncher --> JobContext
+  Start["Lanchement de l'application via Launcher ou Command Line"] -->|0| Traitement -->|4| End["Fin de traitement"]
 ```
 
-:::tip Best Practice
-Ne jamais utiliser d'annotation dans une classe de traitement. Pour un batch _Spring_, les annotations ne seront acceptées que dans la classe définissant
-:::
+0. Lancement de notre application Spring.
+1. Lancement de notre _Job_ au sein de son contexte via le _JobLauncher_.
+2. Lancement de notre _Step_ au sein de son contexte via notre _Job_.
+3. Lancement de note _Tasklet_ via notre _Step_.
+    1. Log dans la console.
+    2. Insert en base de données.
+4. Fin de traitement.
+
+Tentons maintenant d'aller voir ce qu'il se cache derrière cette base de données.
 
 ## Configuration par défaut de la datasource Spring
 
 Comme nous l'avons vu précédemment, _Spring Batch_ utilise par défaut une base de données _H2_ en mémoire.
 
 :::caution Attention
-Nous allons utiliser la console de la base de données H2, elle nous donnera accès à une console Web permettant d'accèder à nos données durant le _debug_ de nos traitement par exemple.
+Nous allons utiliser la console de la base de données H2, elle nous donnera accès à une console Web permettant d'accèder à nos données durant le _debug_ de nos traitements par exemple.
 
 Pour pouvoir l'utiliser, nous devons ajouter la dépendance suivante au pom :
 
@@ -196,7 +184,7 @@ Rendons-nous à cette url : [http://localhost:8080/h2-console](http://localhost:
 |:--:|
 | <b>Console H2 configuré sur le path par défaut /h2-console - Login</b>|
 
-Suivons notre configuration, et utilisons le user _sa_, avec un password vide (pensez à utiliser le bon nom de base de données `5576c7a2-3acb-4f63-bdac-40e738650027`).
+Suivons notre configuration, et utilisons le user _sa_, avec un password vide (pensez à utiliser le bon nom de base de données issu des logs, dans l'exemple : `5576c7a2-3acb-4f63-bdac-40e738650027`, dans l'image : `springMetadata`).
 
 | ![h2-console](/img/datasource/h2_admin.png) |
 |:--:|
@@ -244,7 +232,7 @@ SELECT * FROM BATCH_JOB_EXECUTION;
 |------------------|---------|-----------------|-------------|------------|----------|--------|-----------|--------------|--------------|----------------------------|
 |1 | 1 | 1 | 2021-09-13 19:03:14.702 | 2021-09-13 | 01:03:14.88 | null | STARTED | UNKNOWN | 2021-09-13 01:03:14.881 |null |
 
-La table nous apprend que le _Job_ lié au _JOB_INSTANCE_ID_ 1 est en train de tourné, que son statut de fin d'exécution est indéfini (_STATUS_ = _UNKNWON_, notre point d'arrêt à stoppé temporairement l'exécution du _Job_).
+La table nous apprend que le _Job_ lié au _JOB_INSTANCE_ID_ 1 est en train de tourné, que son statut de fin d'exécution est indéfini (_STATUS_ = null && _EXIT_CODE_ = _UNKNWON_, notre point d'arrêt à stoppé temporairement l'exécution du _Job_).
 
 #### BATCH_JOB_EXECUTION_PARAMS
 
@@ -258,6 +246,8 @@ SELECT * FROM BATCH_JOB_EXECUTION_PARAMS;
 |------------------|---------|----------|------------|----------|----------|------------|-------------|
 
 Il s'agit d'une table très importante, _Spring Batch_ s'appuiera dessus pour le rerun d'un batch déjà exécuté.
+
+Le couple _KEY_NAME_ et _STRING_VAL_ fera office d'identifiant de batch si le boolean _IDENTIFYING_ est à true.
 
 :::info
 Nous verrons plus tard dans le tutoriel comment ajouter des paramètres d'exécution.
@@ -316,12 +306,53 @@ SELECT * FROM BATCH_STEP_EXECUTION_CONTEXT;
 | 1 | {"@class":"java.util.HashMap","batch.taskletType":"fr.goro.tutorial.spring.batch.firstbatch.tasklet.FirstTasklet","batch.stepType":"org.springframework.batch.core.step.tasklet.TaskletStep"} | null |
 
 :::info
-
 Nous verrons plus tard dans le tutoriel comment utiliser les compteurs fournis par les _metadata_ de _Spring Batch_.
-
 :::
 
-## Configuration d'une datasource Spring
+### Cas d'utilisation
+
+Ce cas d'utilisation est relativement rare, il ne s'utilise qu'en cas de non utilisation de base de données annexes (pour stockage, ou récupération de données durant le batch), et de non stockage (à minima pour historisation) des données relatives au exécution de notre traitement.
+
+## Configuration d'une datasource
+
+### Représentation
+
+```mermaid
+flowchart TB
+  subgraph Traitement ["JVM"]
+    direction LR
+    subgraph TrtJava ["&nbsp;"]
+      TutorialSpringBatchApplication ==>|1| JobLauncher
+      subgraph SpringBatchContext ["Spring Batch Application Context"]
+        subgraph JobContext ["Job Context"]
+          Job -.- myFirstJob(myFirstJob)
+          Job ==>|2| StepContext
+          subgraph StepContext ["Step Context"]
+            direction TB
+            Step -.- myFirstStep(myFirstStep)
+            Step ==>|3| Tasklet
+            Tasklet -.- myFirstTasklet(myFirstTasklet)
+          end
+        end
+        JobLauncher <-.-> JobRepository
+        JobContext <-.-> JobRepository
+        StepContext <-.-> JobRepository
+      end
+    end
+  end
+  JobLauncher --> JobContext
+  Start["Lanchement de l'application via Launcher ou Command Line"] -->|0| Traitement -->|4| End["Fin de traitement"]
+  subgraph DataBase ["&nbsp;"]
+    direction BT
+      id3[(H2 - File Database)]
+  end
+  JobRepository <-.-> id3
+  myFirstTasklet <-.-> id3
+```
+
+Contrairement à la configuration par défaut, ici, la base de données n'est plus en mémoire.
+
+Aussi, suite à notre modification de _tasklet_, _myFirstTasklet_ accède (pas très proprement ^^) à notre base de données.
 
 ### Configuration YAML
 
@@ -330,7 +361,7 @@ Commençons par la configuration de la base de données spécifique à _Spring B
 ```yaml title="application.yml"
 spring:
   datasource:
-    url: jdbc:h2:~/Documents/h2db/tutorialSpringBatchDb
+    url: jdbc:h2:~/Documents/h2db/tutorialSpringBatchDb;INIT=CREATE TABLE IF NOT EXISTS info_traitement (message varchar)
     driverClassName: org.h2.Driver
     username: sa
     password: 
@@ -344,7 +375,99 @@ inputFile: file:/chemin/vers/fichier_a_traiter.txt
 
 :::note
 Notre base de données aura pour url une base de données H2 qui pointe vers un fichier local, que nous avons nommée springMetadata, le username par défaut est sa, aucun password.
+
+L'ensemble de la configuration après le `INIT` sert à simuler la présence d'une info_traitement.
+```mermaid
+erDiagram
+    INFO_TRAITEMENT {
+        string message
+   }
+```
 :::
+
+### Configuration Java
+
+NA/ :smile:
+
+_Spring_ se charge de la configuration du `@Bean` _datasource_ tout seul, seules les informations présentent dans la variable de configuration `spring.datasource` du fichier `application.yml` seront nécessaires.
+
+Néanmoins, nous allons modifier notre _tasklet_ pour lui faire écrire en base, alors préparons, le terrain :
+
+```jsx
+    /**
+	 * Définition de notre première {@link Tasklet} de lecture de fichier.
+	 * 
+	 * @param directoryPath la {@link Resource} dont le path est issu du fichier de
+	 *                      configuration.
+	 * @param datasource    la datasource utilisée.
+	 * @return notre première {@link Tasklet} configurée.
+	 */
+	@Bean
+	public Tasklet myFirstTasklet(@Value("${inputFile}") final Resource directoryPath,
+			final DataSource datasource) {
+		return new FirstTasklet(directoryPath, datasource);
+	}
+```
+### Utilisation d'une datasource dans la configuration
+
+:::caution Attention
+Ce code source n'est qu'un exemple le plus simple pour visualiser en base de données le résultat, il ne fait pas office de bon exemple.
+:::
+
+Nous allons simplement ajouter un attribut _DataSource_ et insérer notre contenu dans la base de données :
+
+```jsx {7-10,16,18,21,27-28,37-43}
+...
+	/**
+	 * Le fichier à traiter.
+	 */
+	private final Resource inputFile;
+
+	/**
+	 * Datasource de traitement.
+	 */
+	private final DataSource datasource;
+
+    /**
+     * Constructeur paramétré de MyFirstTasklet.
+     *
+     * @param inputFile  le fichier à traiter.
+     * @param datasource la datasource de traitement.
+     */
+    public FirstTasklet(final Resource inputFile, final DataSource datasource) {
+        Assert.notNull(inputFile, "Le fichier en entrée de la Tasklet ne peut être vide !");
+        this.inputFile = inputFile;
+        this.datasource = datasource;
+    }
+
+    /**
+     * Méthode de traitement de {@link FirstTasklet}.
+     *
+     * Cette méthode logguera puis stockera en base de données le contenu du fichier
+     * passé en paramétre.
+     *
+     */
+    @Override
+    public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) throws Exception {
+        final String message = Files.lines(inputFile.getFile().toPath()).collect(Collectors.joining("\n"));
+    
+        LOGGER.info(message);
+    
+        // Insertion en base de données.
+        final PreparedStatement prepareStatement = datasource.getConnection()
+            .prepareStatement("insert into info_traitement (message) values (?)");
+        prepareStatement.setString(1, message);
+        prepareStatement.executeUpdate();
+    
+        return RepeatStatus.FINISHED;
+    }
+```
+
+:::tip Rappel :smile: Best Practice
+Ne jamais utiliser d'annotation dans une classe de traitement. Pour un batch _Spring_, les annotations ne seront acceptées que dans la main class ou dans le package `config`.
+:::
+
+### Test de l'application
 
 Avec cette configuration, si nous lançons notre batch, nous retrouvons ces informations dans les logs :
 
@@ -375,7 +498,7 @@ o.s.b.c.l.support.SimpleJobLauncher      : Job: [SimpleJob: [name=myFirstJob]] c
 :::caution Attention
 Un _Job_ lancé avec les mêmes paramètres (ici, aucun paramètre) ne peut être relancé que s'il n'est pas à l'état _COMPLETED_ (notamment pour pouvoir relancer un batch _FAILED_ après correction des entrants par exemple).
 
-Il est possible de la faire sur une base de données embarquée en mémoire car celle-ci est recréée à chaque lancement du batch.
+Il est possible de le faire sur une base de données embarquée en mémoire car celle-ci est recréée à chaque lancement du batch.
 :::
 
 Ici, nous travaillons sur une base de données en local, vous pouvez supprimer le fichier _db_ créé au chemin défini dans l'`application.yml`.
@@ -398,12 +521,53 @@ public Job myFirstJob(final JobBuilderFactory jobBuilderFactory, final Step myFi
 Nous utilisons ici un incrémenteur d'identifiant de metadata, ce qui nous permettra de relancer le batch avec les mêmes paramètres.
 :::
 
-Vous pouvez désormais relancer le batch autant de fois que vous voulez, il crééra autant d'instance de _Job_ en base de données.
+Vous pouvez désormais supprimer vos point d'arrêt et relancer le batch autant de fois que vous voulez, il crééra autant d'instance de _Job_ en base de données.
 
+### Alternative à la console H2
+
+Désormais, nous avons un fichier _db_ qui stocke notre base de données H2, il est facile de paramétrer une vue pour accèder graphiquement aux données.
+
+#### La vue Database Development
+
+Cette vue est disponible sur _Eclipse EE 2021-06_, elle peut être installée via le MarketPlace sur d'autres versions : `Database Tools Platform (DTP) Plugin`. 
+
+| __![DbeaverData](/img/datasource/dtp_config.png)__ |
+|:--:|
+| __Database Tools Plateform - Configuration__ |
+
+| __![DbeaverData](/img/datasource/dtp_viewdata.png)__ |
+|:--:|
+| __Database Tools Plateform - View Data__ |
+
+#### La vue DBEaver
+
+DbEaver est un plugin disponible sur le MarketPlace.
+
+| __![DbeaverData](/img/datasource/dbeaver_config.png)__ |
+|:--:|
+| __DbEaver - Configuration__ |
+
+| __![DbeaverData](/img/datasource/dbeaver_viewdata.png)__ |
+|:--:|
+| __DbEaver - View Data__ |
+
+Des deux, DBEaver est le seul à proposer un exécuteur de requête, ce qui peut être très utile.
+
+:::danger
+Lorsque vous vous connectez à la base de données via l'un de ces deux plugins, vous verrouillez la base de données. Pensez à systématiquement couper la connexion après avoir analysé les données.
+:::
+
+### Cas d'utilisation
+
+Ce cas d'utilisation est, selon moi, un cas standard lorsque 
+- l'on n'accède à aucune autre base de données **OU**
+- l'on peut stocker les metadatas sur le schèma par défaut (généralement _public_) de la base de données utilisées pour nos traitements.
+
+Dans le cas contraire (une base de données est utilisée, mais on ne peut pas y stocker nos metadata), il est possible de configurer d'autres datasource.
 
 ## Configuration d'une seconde datasource
 
-### Configuration YML de la seconde datasource
+### Configuration YAML
 
 Nous allons modifier l'`application.yml` comme ci-dessous :
 
@@ -412,27 +576,24 @@ spring:
   batch: 
     jdbc:
       initialize-schema: always
-      table-prefix: tutorialSpringBatchMetadata.BATCH_
   datasource:
-    hikari:
-      jdbcUrl: "jdbc:h2:~/Documents/h2db/tutorialSpringBatchDb;INIT=CREATE SCHEMA IF NOT EXISTS tutorialSpringBatchMetadata\\;SET SCHEMA tutorialSpringBatchMetadata"
-      driver-class-name: org.h2.Driver
-      username: sa
-      password:
+    jdbcUrl: jdbc:h2:~/Documents/h2db/tutorialSpringBatchMetadataDb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
   datasourceTraitement:  
-    hikari:
-      jdbcUrl: "jdbc:h2:~/Documents/h2db/tutorialSpringBatchDb;INIT=CREATE SCHEMA IF NOT EXISTS tutorialSpringBatchTraitement\\;SET SCHEMA tutorialSpringBatchTraitement\\;CREATE TABLE IF NOT EXISTS tutorialSpringBatchTraitement.info_traitement (message varchar)"
-      driver-class-name: org.h2.Driver
-      username: sa
-      password: 
-inputFile: file:/home/goro/Documents/test_tuto_batch/fichier_a_traiter.txt
+    jdbcUrl: jdbc:h2:~/Documents/h2db/tutorialSpringBatchTraitementDb;INIT=CREATE TABLE IF NOT EXISTS info_traitement (message varchar)
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+inputFile: file:~/Documents/test_tuto_batch/fichier_a_traiter.txt
 ```
 
 :::info
 La propriété _datasourceTraitement_ est un nom défini arbitrairement, essayer d'être cohérent et parlant lors du nommage de celle-ci.
 :::
 
-### Configuration Java des datasource
+### Configuration Java
 
 La configuration d'une datasource via _Spring Boot_ est grandement simplifiée, ainsi, voici la définition de nos deux datasources :
 
@@ -463,7 +624,7 @@ public class DatasourcesConfiguration {
 	 */
 	@Bean
 	@Primary
-	@ConfigurationProperties(prefix="spring.datasource.hikari")
+	@ConfigurationProperties(prefix="spring.datasource")
 	public DataSource datasource() {
 	    return DataSourceBuilder.create().build();
 	}
@@ -474,7 +635,7 @@ public class DatasourcesConfiguration {
 	 * @return la datasource secondaire.
 	 */
 	@Bean
-	@ConfigurationProperties(prefix="spring.datasource-traitement.hikari")
+	@ConfigurationProperties(prefix="spring.datasource-traitement")
 	public DataSource secondDatasource() {
 	    return DataSourceBuilder.create().build();
 	}
@@ -483,7 +644,7 @@ public class DatasourcesConfiguration {
 ```
 
 :::info
-- Il est important de préciser à _Spring Batch_ une _@Primary_ datasource, c'est celle qui sera utilisé pour la création des metadata.
+- Il est important de préciser à _Spring Batch_ une `@Primary` _datasource_, c'est celle qui sera utilisé pour la création des metadata.
 
 - Lors de l'utilisation de _@ConfigurationProperties_ (activée par _@EnableConfigurationProperties_), il est recommandé d'ajouter cette dépendance au pom :
 
@@ -498,12 +659,39 @@ public class DatasourcesConfiguration {
 
 ### Utilisation des datasources
 
+```jsx
+    /**
+	 * Définition de notre première {@link Tasklet} de lecture de fichier.
+	 * 
+	 * @param directoryPath la {@link Resource} dont le path est issu du fichier de
+	 *                      configuration.
+	 * @param secondDatasource    la datasource utilisée.
+	 * @return notre première {@link Tasklet} configurée.
+	 */
+	@Bean
+	public Tasklet myFirstTasklet(@Value("${inputFile}") final Resource directoryPath,
+			@Qualifier("secondDatasource") final DataSource secondDatasource) {
+		return new FirstTasklet(directoryPath, secondDatasource);
+	}
+```
+
+:::note
+Il est, à priori, indispensable d'utiliser un `@Qualifier` lorsqu'on utilise plusieurs datasources.
+:::
 
 ### Test de l'application
 
-## Configuration Mono datasource Specifique Schéma
-TODO
+| __![DbeaverData](/img/datasource/h2_double_datasource.png)__ |
+|:--:|
+| __DbEaver - View Data - Twice Datasources__ |
+
+Nous avons bien nos deux _datasources_ attendues :
+- tutorialSpringBatchMetadataDb contenant les _metadata_ de _Spring Batch_,
+- tutorialSpringBatchTraitementDb contenant les données métiers de notre traitement.
 
 ## Conclusion
 
-TODO
+Nous venons de voir qu'il est assez simple de configurer des bases de données avec l'auto configuration de _Spring_, 
+néanmoins, nous avons été incapable de relancer notre batch sans `IncrementerId`.
+
+Afin de mieux comprendre ce point, nous allons nous pencher sur la table BATCH_JOB_PARAMETERS, et l'utilisation de paramètre passé au _Job_.
